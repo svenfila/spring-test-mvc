@@ -4,6 +4,7 @@ import java.net.URI;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -207,6 +208,16 @@ public class DefaultMockHttpServletRequestBuilderTests {
 	@Test
 	public void sessionAttr() throws Exception {
 		builder.sessionAttr("foo", "bar");
+
+		MockHttpServletRequest request = builder.buildRequest(servletContext);
+		assertEquals("bar", request.getSession().getAttribute("foo"));
+	}
+
+	@Test
+	public void sessionAttrs() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("foo", "bar");
+		builder.sessionAttrs(map);
 
 		MockHttpServletRequest request = builder.buildRequest(servletContext);
 		assertEquals("bar", request.getSession().getAttribute("foo"));

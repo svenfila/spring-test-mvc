@@ -157,6 +157,12 @@ public class DefaultRequestBuilder implements RequestBuilder {
 		this.sessionAttributes.put(name, value);
 		return this;
 	}
+
+	public DefaultRequestBuilder sessionAttrs(Map<String, Object> attrs) {
+		Assert.notNull(attrs, "'attrs' must not be null");
+		this.sessionAttributes.putAll(attrs);
+		return this;
+	}
 	
 	public DefaultRequestBuilder session(MockHttpSession session) {
 		Assert.notNull(session, "'session' must not be null");
