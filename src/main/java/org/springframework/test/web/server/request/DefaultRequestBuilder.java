@@ -30,6 +30,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.server.MockMvc;
 import org.springframework.test.web.server.RequestBuilder;
 import org.springframework.util.Assert;
@@ -71,6 +72,8 @@ public class DefaultRequestBuilder implements RequestBuilder {
 
 	private final Map<String, Object> sessionAttributes = new LinkedHashMap<String, Object>();
 
+	private MockHttpSession session;
+	
 	private Principal principal;
 
 	private String contextPath = "";
@@ -154,6 +157,12 @@ public class DefaultRequestBuilder implements RequestBuilder {
 		this.sessionAttributes.put(name, value);
 		return this;
 	}
+	
+	public DefaultRequestBuilder session(MockHttpSession session) {
+		Assert.notNull(session, "'session' must not be null");
+		this.session = session;
+		return this;
+	}
 
 	public DefaultRequestBuilder principal(Principal principal) {
 		Assert.notNull(principal, "'principal' must not be null");
@@ -220,6 +229,10 @@ public class DefaultRequestBuilder implements RequestBuilder {
 		}
 		for (String name : this.attributes.keySet()) {
 			request.setAttribute(name, this.attributes.get(name));
+		}
+		
+		if (this.session != null) {
+			request.setSession(this.session);
 		}
 		for (String name : this.sessionAttributes.keySet()) {
 			request.getSession().setAttribute(name, this.sessionAttributes.get(name));
