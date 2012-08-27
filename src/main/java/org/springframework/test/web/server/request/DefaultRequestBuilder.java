@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.web.server.MockMvc;
 import org.springframework.test.web.server.RequestBuilder;
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
@@ -73,7 +72,7 @@ public class DefaultRequestBuilder implements RequestBuilder {
 	private final Map<String, Object> sessionAttributes = new LinkedHashMap<String, Object>();
 
 	private MockHttpSession session;
-	
+
 	private Principal principal;
 
 	private String contextPath = "";
@@ -82,7 +81,7 @@ public class DefaultRequestBuilder implements RequestBuilder {
 
 	private boolean secure = false;
 
-	/** Use methods on {@link MockMvc} to obtain a new instance. */
+	/** Use methods on {@link MockMvcRequestBuilders} to obtain a new instance. */
 	DefaultRequestBuilder(URI uri, HttpMethod method) {
 		this.uri = uri;
 		this.method = method;
@@ -163,7 +162,12 @@ public class DefaultRequestBuilder implements RequestBuilder {
 		this.sessionAttributes.putAll(attrs);
 		return this;
 	}
-	
+
+	/**
+	 * Provide an MockHttpSession instance to use, possibly for re-use across tests.
+	 * Attributes provided via {@link #sessionAttr(String, Object)} and
+	 * {@link #sessionAttrs(Map)} will override attributes in the provided session.
+	 */
 	public DefaultRequestBuilder session(MockHttpSession session) {
 		Assert.notNull(session, "'session' must not be null");
 		this.session = session;
@@ -236,7 +240,7 @@ public class DefaultRequestBuilder implements RequestBuilder {
 		for (String name : this.attributes.keySet()) {
 			request.setAttribute(name, this.attributes.get(name));
 		}
-		
+
 		if (this.session != null) {
 			request.setSession(this.session);
 		}

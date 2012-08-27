@@ -228,9 +228,9 @@ public class DefaultMockHttpServletRequestBuilderTests {
 		MockHttpSession session = new MockHttpSession(servletContext);
 		session.setAttribute("foo", "bar");
 		builder.session(session);
-		
+
 		builder.sessionAttr("baz", "qux");
-		
+
 		MockHttpServletRequest request = builder.buildRequest(servletContext);
 		assertEquals(session, request.getSession());
 		assertEquals("bar", request.getSession().getAttribute("foo"));
